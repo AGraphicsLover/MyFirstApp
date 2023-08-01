@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">MyFirstApp</string>
+  <string name="scan_description">扫描</string>
+  <string name="search_description">搜索</string>
+  <string name="first_page">首页</string>
+  <string name="second_page">问答</string>
+</resources>

@@ -1,0 +1,77 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar1"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <!-- 扫描二维码图标 -->
+    <ImageView
+      android:id="@+id/scanImageView"
+      android:layout_width="20dp"
+      android:layout_height="30dp"
+      android:layout_gravity="start"
+      android:contentDescription="@string/scan_description"
+      android:src="@drawable/scan" />
+
+    <!-- 首页二字 -->
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="30dp"
+      android:layout_gravity="center"
+      android:text="@string/first_page"
+      android:textColor="@android:color/white"
+      android:textSize="20sp" />
+
+    <!-- 搜索图标 -->
+    <ImageView
+      android:id="@+id/searchImageView"
+      android:layout_width="20dp"
+      android:layout_height="30dp"
+      android:layout_gravity="end"
+      android:layout_marginEnd="15dp"
+      android:contentDescription="@string/search_description"
+      android:src="@drawable/search" />
+
+  </androidx.appcompat.widget.Toolbar>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- ViewPager 包含 Banner 和 RecyclerView -->
+    <androidx.viewpager2.widget.ViewPager2
+      android:id="@+id/viewPager"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:layout_weight="0.3" />
+
+    <!-- SwipeRefreshLayout 包含 RecyclerView -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipeRefreshLayout"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="0.7">
+
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+  </LinearLayout>
+
+  <com.google.android.material.bottomnavigation.BottomNavigationView
+    android:id="@+id/bottomNavigationView"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:layout_gravity="bottom"
+    app:menu="@menu/bottom_nav_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
