@@ -2,7 +2,7 @@
   <item
     android:id="@+id/action_home"
     android:icon="@drawable/home"
-    android:title="首页" />
+    android:title="@string/first_page" />
   <item
     android:id="@+id/action_question"
     android:icon="@drawable/message"
