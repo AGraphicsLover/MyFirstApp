@@ -4,7 +4,6 @@ import ArticleItem
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -77,18 +76,15 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() 
     private val updateTimeTextView: TextView = itemView.findViewById(R.id.updateTimeTextView)
     private val sourceTextView: TextView = itemView.findViewById(R.id.sourceTextView)
     private val likeButton: ImageButton = itemView.findViewById(R.id.likeButton)
-
+    private val chapterNameTextView:TextView = itemView.findViewById(R.id.chapterNameTextView)
     fun bind(articleItem: ArticleItem) {
       titleTextView.text = articleItem.title
-      val author: String
-      if (articleItem.author.equals("")) {
-        author = articleItem.shareUser
-      } else {
-        author = articleItem.author
-      }
+      val author: String = if (articleItem.author == "") articleItem.shareUser else articleItem
+        .author
       authorTextView.text = author
       updateTimeTextView.text = articleItem.niceDate
       sourceTextView.text = articleItem.superChapterName
+      chapterNameTextView.text = " · ${articleItem.chapterName}"
       itemView.setOnClickListener {
         onItemClickListener?.onItemClick(articleItem)
       }

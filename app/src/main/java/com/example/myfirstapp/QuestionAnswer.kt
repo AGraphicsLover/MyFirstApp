@@ -1,15 +1,12 @@
 package com.example.myfirstapp
 
-import ArticleItem
+import QuestionItem
 import android.app.ProgressDialog
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -25,7 +22,7 @@ import java.io.IOException
 class QuestionAnswer : AppCompatActivity() {
 
   private lateinit var recyclerView: RecyclerView
-  private lateinit var articleAdapter: ArticleAdapter
+  private lateinit var questionAdapter: QuestionAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
   private var currentPage = 0
@@ -33,19 +30,14 @@ class QuestionAnswer : AppCompatActivity() {
 
   private var progressDialog: ProgressDialog? = null
 
-  private lateinit var toolbar: Toolbar
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_question_answer)
 
-    toolbar = findViewById(R.id.toolbar2)
-    toolbar.setBackgroundColor(getStatusBarColor())
-
     recyclerView = findViewById(R.id.recyclerView2)
     recyclerView.layoutManager = LinearLayoutManager(this)
-    articleAdapter = ArticleAdapter()
-    recyclerView.adapter = articleAdapter
+    questionAdapter = QuestionAdapter()
+    recyclerView.adapter = questionAdapter
 
     val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
     bottomNavigationView.setOnItemSelectedListener { item ->
@@ -86,25 +78,24 @@ class QuestionAnswer : AppCompatActivity() {
     swipeRefreshLayout.setOnRefreshListener {
       currentPage = 0
       runOnUiThread {
-        articleAdapter.setDataClear()
+        questionAdapter.setDataClear()
       }
-      fetchArticleData()
+      fetchQuestionData()
     }
 
-    articleAdapter.setOnLikeButtonClickListener(object : ArticleAdapter.OnLikeButtonClickListener {
-      override fun onLikeButtonClick(articleItem: ArticleItem) {
-        articleItem?.isLiked = !(articleItem.isLiked)
-        articleAdapter.updateLikeOfArticleItem(articleItem)
+    questionAdapter.setOnLikeButtonClickListener(object :
+      QuestionAdapter.OnLikeButtonClickListener {
+      override fun onLikeButtonClick(questionItem: QuestionItem) {
+        questionItem.isLiked = !(questionItem.isLiked)
+        questionAdapter.updateLikeOfArticleItem(questionItem)
       }
     })
 
-    articleAdapter.setOnItemClickListener(object : ArticleAdapter.OnItemClickListener {
-      override fun onItemClick(articleItem: ArticleItem) {
-        if (articleItem != null) {
-          val intent = Intent(this@QuestionAnswer, WebViewActivity::class.java)
-          intent.putExtra("url", articleItem.link)
-          startActivity(intent)
-        }
+    questionAdapter.setOnItemClickListener(object : QuestionAdapter.OnItemClickListener {
+      override fun onItemClick(questionItem: QuestionItem) {
+        val intent = Intent(this@QuestionAnswer, WebViewActivity::class.java)
+        intent.putExtra("url", questionItem.link)
+        startActivity(intent)
       }
     })
 
@@ -112,7 +103,7 @@ class QuestionAnswer : AppCompatActivity() {
     setupRecyclerViewScrollListener()
 
     // 第一次加载数据
-    fetchArticleData()
+    fetchQuestionData()
   }
 
   private fun showProgressDialog() {
@@ -128,21 +119,11 @@ class QuestionAnswer : AppCompatActivity() {
     progressDialog?.dismiss()
   }
 
-  private fun getStatusBarColor(): Int {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      // 在 Android 5.0 及以上版本可以使用 window.statusBarColor 获取状态栏颜色
-      val window = window
-      return window.statusBarColor
-    }
-    // 如果是 Android 5.0 以下版本，则默认返回一个颜色值
-    return ContextCompat.getColor(this, R.color.blue)
-  }
-
   private fun fetchNextPage() {
     showProgressDialog()
     val client = OkHttpClient()
     val request = Request.Builder()
-      .url("https://www.wanandroid.com/article/list/$currentPage/json")
+      .url("https://wanandroid.com/wenda/list/$currentPage/json")
       .build()
 
     client.newCall(request).enqueue(object : Callback {
@@ -164,26 +145,29 @@ class QuestionAnswer : AppCompatActivity() {
           val dataArray = jsonObject.optJSONObject("data")?.optJSONArray("datas")
 
           if (dataArray != null) {
-            val articleList = mutableListOf<ArticleItem>()
+            val questionList = mutableListOf<QuestionItem>()
 
             for (i in 0 until dataArray.length()) {
-              val articleObject = dataArray.getJSONObject(i)
-              val titleOrigin = articleObject.optString("title")
-              val author = articleObject.optString("author")
-              val shareUser = articleObject.optString("shareUser")
-              val niceDate = articleObject.optString("niceDate")
-              val superChapterName = articleObject.optString("superChapterName")
-              val link = articleObject.optString("link")
+              val questionObject = dataArray.getJSONObject(i)
+              val titleOrigin = questionObject.optString("title")
+              val author = questionObject.optString("author")
+              val niceDate = questionObject.optString("niceDate")
+              val descOrigin = questionObject.optString("desc")
+              val chapterName = questionObject.optString("chapterName")
+              val superChapterName = questionObject.optString("superChapterName")
+              val link = questionObject.optString("link")
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
-              articleList.add(
-                ArticleItem(
+              val desc = Html.fromHtml(descOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
+              questionList.add(
+                QuestionItem(
                   title,
                   author,
-                  shareUser,
                   niceDate,
+                  desc,
+                  chapterName,
                   superChapterName,
-                  link,
-                  isLiked = false
+                  isLiked = false,
+                  link
                 )
               )
             }
@@ -192,9 +176,9 @@ class QuestionAnswer : AppCompatActivity() {
 
             runOnUiThread {
               if (currentPage == 0) {
-                articleAdapter.setData(articleList)
+                questionAdapter.setData(questionList)
               } else {
-                articleAdapter.addData(articleList)
+                questionAdapter.addData(questionList)
               }
               swipeRefreshLayout.isRefreshing = false
             }
@@ -204,11 +188,11 @@ class QuestionAnswer : AppCompatActivity() {
     })
   }
 
-  private fun fetchArticleData() {
+  private fun fetchQuestionData() {
 
     val client = OkHttpClient()
     val request = Request.Builder()
-      .url("https://www.wanandroid.com/article/list/$currentPage/json")
+      .url("https://wanandroid.com/wenda/list/$currentPage/json")
       .build()
 
     client.newCall(request).enqueue(object : Callback {
@@ -230,35 +214,38 @@ class QuestionAnswer : AppCompatActivity() {
           val dataArray = jsonObject.optJSONObject("data")?.optJSONArray("datas")
 
           if (dataArray != null) {
-            val articleList = mutableListOf<ArticleItem>()
+            val questionList = mutableListOf<QuestionItem>()
 
             for (i in 0 until dataArray.length()) {
-              val articleObject = dataArray.getJSONObject(i)
-              val titleOrigin = articleObject.optString("title")
-              val author = articleObject.optString("author")
-              val shareUser = articleObject.optString("shareUser")
-              val niceDate = articleObject.optString("niceDate")
-              val superChapterName = articleObject.optString("superChapterName")
-              val link = articleObject.optString("link")
+              val questionObject = dataArray.getJSONObject(i)
+              val titleOrigin = questionObject.optString("title")
+              val author = questionObject.optString("author")
+              val niceDate = questionObject.optString("niceDate")
+              val descOrigin = questionObject.optString("desc")
+              val chapterName = questionObject.optString("chapterName")
+              val superChapterName = questionObject.optString("superChapterName")
+              val link = questionObject.optString("link")
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
-              articleList.add(
-                ArticleItem(
+              val desc = Html.fromHtml(descOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
+              questionList.add(
+                QuestionItem(
                   title,
                   author,
-                  shareUser,
                   niceDate,
+                  desc,
+                  chapterName,
                   superChapterName,
-                  link,
-                  isLiked = false
+                  isLiked = false,
+                  link
                 )
               )
             }
 
             runOnUiThread {
               if (currentPage == 0) {
-                articleAdapter.setData(articleList)
+                questionAdapter.setData(questionList)
               } else {
-                articleAdapter.addData(articleList)
+                questionAdapter.addData(questionList)
               }
               swipeRefreshLayout.isRefreshing = false
             }

@@ -2,6 +2,25 @@
   <string name="app_name">MyFirstApp</string>
   <string name="scan_description">扫描</string>
   <string name="search_description">搜索</string>
+  <string name="like">喜欢</string>
+  <string name="unlike">不喜欢</string>
   <string name="first_page">首页</string>
   <string name="second_page">问答</string>
+  <string name="third_page">体系</string>
+  <string name="fourth_page">我的</string>
+  <string name="night">夜间模式</string>
+  <string name="notice">通知</string>
+  <string name="collect">收藏</string>
+  <string name="avatar">头像</string>
+  <string name="score">我的积分</string>
+  <string name="share">我的分享</string>
+  <string name="myCollect">我的收藏</string>
+  <string name="read">稍后阅读</string>
+  <string name="history">阅读历史</string>
+  <string name="github">开源项目</string>
+  <string name="about">关于作者</string>
+  <string name="setting">系统设置</string>
+  <string name="goTo">进入</string>
+  <string name="logIn">去登录</string>
+  <string name="donate">请他喝杯咖啡~</string>
 </resources>

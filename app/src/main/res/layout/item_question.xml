@@ -5,61 +5,74 @@
   android:padding="8dp">
 
   <TextView
-    android:id="@+id/authorTextView"
+    android:id="@+id/item_question_author_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="start|top"
-    android:textColor="#8A8A8A"
-    android:textSize="14sp"
+    android:textColor="#BFBFBF"
+    android:textSize="12sp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
   <TextView
-    android:id="@+id/updateTimeTextView"
+    android:id="@+id/item_question_date_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="end|top"
-    android:textColor="#8A8A8A"
-    android:textSize="14sp"
+    android:textColor="#BFBFBF"
+    android:textSize="12sp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
   <TextView
-    android:id="@+id/titleTextView"
+    android:id="@+id/item_question_title_tv"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
+    android:layout_marginTop="3dp"
     android:gravity="start"
     android:textSize="18sp"
     android:textStyle="bold"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/authorTextView" />
+    app:layout_constraintTop_toBottomOf="@id/item_question_author_tv" />
 
   <TextView
-    android:id="@+id/sourceTextView"
-    android:layout_width="wrap_content"
+    android:id="@+id/item_question_desc_tv"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    android:textColor="#8A8A8A"
-    android:textSize="14sp"
+    android:ellipsize="end"
+    android:maxLines="3"
+    android:textColor="#707070"
+    android:textSize="15sp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+    app:layout_constraintTop_toBottomOf="@id/item_question_title_tv"
+    app:layout_constraintVertical_bias="0" />
 
   <TextView
-    android:id="@+id/chapterNameTextView"
+    android:id="@+id/item_question_super_chapter_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
-    android:textColor="#8A8A8A"
-    android:textSize="14sp"
+    android:textColor="#BFBFBF"
+    android:textSize="12sp"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toEndOf="@+id/sourceTextView"
-    app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/item_question_desc_tv" />
+
+  <TextView
+    android:id="@+id/item_question_chapter_tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="3dp"
+    android:textColor="#BFBFBF"
+    android:textSize="12sp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toEndOf="@id/item_question_super_chapter_tv"
+    app:layout_constraintTop_toBottomOf="@id/item_question_desc_tv" />
 
   <ImageButton
-    android:id="@+id/likeButton"
+    android:id="@+id/like_btn"
     android:layout_width="25dp"
     android:layout_height="25dp"
     android:layout_marginTop="3dp"
@@ -69,6 +82,6 @@
     android:src="@drawable/unlike"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+    app:layout_constraintTop_toBottomOf="@id/item_question_desc_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

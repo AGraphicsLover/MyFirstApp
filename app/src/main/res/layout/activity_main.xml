@@ -4,13 +4,12 @@
   android:layout_height="match_parent">
 
   <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar1"
     android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:layout_height="40dp"
+    android:background="?attr/colorPrimary">
 
     <!-- 扫描二维码图标 -->
     <ImageView
-      android:id="@+id/scanImageView"
       android:layout_width="20dp"
       android:layout_height="30dp"
       android:layout_gravity="start"
@@ -28,7 +27,6 @@
 
     <!-- 搜索图标 -->
     <ImageView
-      android:id="@+id/searchImageView"
       android:layout_width="20dp"
       android:layout_height="30dp"
       android:layout_gravity="end"
@@ -48,7 +46,7 @@
       android:id="@+id/viewPager"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_marginTop="?attr/actionBarSize"
+      android:layout_marginTop="40dp"
       android:layout_weight="0.3" />
 
     <!-- SwipeRefreshLayout 包含 RecyclerView -->

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class System : AppCompatActivity() {
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_system)
@@ -45,4 +46,5 @@ class System : AppCompatActivity() {
 
     bottomNavigationView.selectedItemId = R.id.action_system
   }
+
 }

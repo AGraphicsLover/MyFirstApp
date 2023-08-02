@@ -4,14 +4,12 @@ import ArticleItem
 import BannerItem
 import android.app.ProgressDialog
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,14 +42,9 @@ class MainActivity : AppCompatActivity() {
 
   private var progressDialog: ProgressDialog? = null
 
-  private lateinit var toolbar: Toolbar
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-
-    toolbar = findViewById(R.id.toolbar1)
-    toolbar.setBackgroundColor(getStatusBarColor())
 
     recyclerView = findViewById(R.id.recyclerView)
     recyclerView.layoutManager = LinearLayoutManager(this)
@@ -143,11 +136,9 @@ class MainActivity : AppCompatActivity() {
 
     articleAdapter.setOnItemClickListener(object : ArticleAdapter.OnItemClickListener {
       override fun onItemClick(articleItem: ArticleItem) {
-        if (articleItem != null) {
-          val intent = Intent(this@MainActivity, WebViewActivity::class.java)
-          intent.putExtra("url", articleItem.link)
-          startActivity(intent)
-        }
+        val intent = Intent(this@MainActivity, WebViewActivity::class.java)
+        intent.putExtra("url", articleItem.link)
+        startActivity(intent)
       }
     })
 
@@ -185,16 +176,6 @@ class MainActivity : AppCompatActivity() {
     progressDialog?.dismiss()
   }
 
-  private fun getStatusBarColor(): Int {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      // 在 Android 5.0 及以上版本可以使用 window.statusBarColor 获取状态栏颜色
-      val window = window
-      return window.statusBarColor
-    }
-    // 如果是 Android 5.0 以下版本，则默认返回一个颜色值
-    return ContextCompat.getColor(this, R.color.blue)
-  }
-
   private fun fetchNextPage() {
     showProgressDialog()
     val client = OkHttpClient()
@@ -229,6 +210,7 @@ class MainActivity : AppCompatActivity() {
               val author = articleObject.optString("author")
               val shareUser = articleObject.optString("shareUser")
               val niceDate = articleObject.optString("niceDate")
+              val chapterName = articleObject.optString("chapter")
               val superChapterName = articleObject.optString("superChapterName")
               val link = articleObject.optString("link")
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
@@ -238,6 +220,7 @@ class MainActivity : AppCompatActivity() {
                   author,
                   shareUser,
                   niceDate,
+                  chapterName,
                   superChapterName,
                   link,
                   isLiked = false
@@ -295,6 +278,7 @@ class MainActivity : AppCompatActivity() {
               val author = articleObject.optString("author")
               val shareUser = articleObject.optString("shareUser")
               val niceDate = articleObject.optString("niceDate")
+              val chapterName = articleObject.optString("chapterName")
               val superChapterName = articleObject.optString("superChapterName")
               val link = articleObject.optString("link")
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
@@ -304,6 +288,7 @@ class MainActivity : AppCompatActivity() {
                   author,
                   shareUser,
                   niceDate,
+                  chapterName,
                   superChapterName,
                   link,
                   isLiked = false

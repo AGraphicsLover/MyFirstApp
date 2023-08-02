@@ -10,9 +10,9 @@
   <item
     android:id="@+id/action_system"
     android:icon="@drawable/book"
-    android:title="体系" />
+    android:title="@string/third_page" />
   <item
     android:id="@+id/action_profile"
     android:icon="@drawable/person"
-    android:title="我的" />
+    android:title="@string/fourth_page" />
 </menu>

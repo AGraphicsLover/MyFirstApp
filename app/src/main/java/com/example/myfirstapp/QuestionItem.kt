@@ -1,10 +1,10 @@
-data class ArticleItem(
+data class QuestionItem(
   val title: String,
   val author: String,
-  val shareUser: String,
   val niceDate: String,
+  val desc: String,
   val chapterName: String,
   val superChapterName: String,
-  val link: String,
-  var isLiked: Boolean
+  var isLiked: Boolean,
+  val link: String
 )
