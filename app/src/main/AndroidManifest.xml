@@ -15,6 +15,9 @@
     android:theme="@style/Theme.MyFirstApp"
     tools:targetApi="31">
     <activity
+      android:name=".LogIn"
+      android:exported="false" />
+    <activity
       android:name=".Person"
       android:exported="false" />
     <activity

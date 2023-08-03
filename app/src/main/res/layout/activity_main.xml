@@ -47,14 +47,17 @@
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_marginTop="40dp"
-      android:layout_weight="0.3" />
+      android:layout_weight="0.3"
+      android:background="@color/bgPurple" />
 
     <!-- SwipeRefreshLayout 包含 RecyclerView -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
       android:id="@+id/swipeRefreshLayout"
+
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_weight="0.7">
+      android:layout_weight="0.7"
+      android:background="@color/bgPurple">
 
       <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
