@@ -15,7 +15,7 @@
       android:layout_height="30dp"
       android:layout_gravity="center"
       android:text="@string/third_page"
-      android:textColor="@android:color/white"
+      android:textColor="@color/white"
       android:textSize="20sp" />
 
   </androidx.appcompat.widget.Toolbar>

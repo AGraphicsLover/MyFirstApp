@@ -84,6 +84,11 @@ class LogIn : AppCompatActivity() {
               if (errorCode == 0) {
                 val dataObject = jsonObject.optJSONObject("data")
                 val userName = dataObject?.optString("username")
+                val sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean("isLogin", true)
+                editor.putString("username", userName)
+                editor.apply()
 
                 val handler = Handler(mainLooper)
                 handler.post {

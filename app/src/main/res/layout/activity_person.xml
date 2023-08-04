@@ -23,7 +23,7 @@
       android:layout_height="30dp"
       android:layout_gravity="center"
       android:text="@string/fourth_page"
-      android:textColor="@android:color/white"
+      android:textColor="@color/white"
       android:textSize="20sp" />
 
     <ImageView
@@ -117,7 +117,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:text="@string/score"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
           <ImageView
@@ -149,7 +149,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:text="@string/myCollect"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
           <ImageView
@@ -181,7 +181,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:text="@string/read"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
           <ImageView
@@ -213,7 +213,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:text="@string/history"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
           <ImageView
@@ -245,7 +245,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:text="@string/github"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
           <ImageView
@@ -277,7 +277,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:text="@string/about"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
           <TextView
@@ -317,7 +317,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:text="@string/setting"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
           <ImageView

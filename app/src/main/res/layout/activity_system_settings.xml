@@ -1,0 +1,396 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/bgPurple"
+  android:gravity="center_horizontal">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/system_settings_tb"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="?attr/colorPrimary"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <ImageView
+      android:id="@+id/system_settings_back_iv"
+      android:layout_width="20dp"
+      android:layout_height="30dp"
+      android:layout_gravity="start"
+      android:contentDescription="返回"
+      android:src="@drawable/whiteback" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="30dp"
+      android:layout_gravity="center"
+      android:text="设置"
+      android:textColor="@android:color/white"
+      android:textSize="20sp" />
+
+  </androidx.appcompat.widget.Toolbar>
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/system_settings_tb">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_follow_dark_mode_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_follow_dark_mode_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="跟随系统暗色模式"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+          android:id="@+id/system_settings_follow_dark_mode_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_dark_mode_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_dark_mode_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="暗色模式"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+          android:id="@+id/system_settings_dark_mode_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_read_after_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_read_after_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="稍后阅读"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/system_settings_read_after_explain_tv"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="不同于收藏，此功能无需登录，为本地操作，更换手机或重置APP后已添加的数据将丢失"
+          android:textColor="@color/grey"
+          android:textSize="14sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/system_settings_read_after_tv" />
+
+        <Switch
+          android:id="@+id/system_settings_read_after_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintBottom_toBottomOf="@+id/system_settings_read_after_explain_tv"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="@id/system_settings_read_after_tv" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_read_history_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_read_history_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="阅读历史"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/system_settings_read_history_explain_tv"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="便于查找阅读过的文章，为本地操作，更换手机或重置APP后已添加的数据将丢失"
+          android:textColor="@color/grey"
+          android:textSize="14sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/system_settings_read_history_tv" />
+
+        <Switch
+          android:id="@+id/system_settings_read_history_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintBottom_toBottomOf="@+id/system_settings_read_history_explain_tv"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="@id/system_settings_read_history_tv" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_pin_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_pin_top_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="显示置顶"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/system_settings_pin_top_explain_tv"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="开启后首页显示置顶文章"
+          android:textColor="@color/grey"
+          android:textSize="14sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/system_settings_pin_top_tv" />
+
+        <Switch
+          android:id="@+id/system_settings_pin_top_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintBottom_toBottomOf="@+id/system_settings_pin_top_explain_tv"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="@id/system_settings_pin_top_tv" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_carousel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_carousel_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="显示轮播"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/system_settings_carousel_explain_tv"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="开启后首页显示轮播图"
+          android:textColor="@color/grey"
+          android:textSize="14sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/system_settings_carousel_tv" />
+
+        <Switch
+          android:id="@+id/system_settings_carousel_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintBottom_toBottomOf="@+id/system_settings_carousel_explain_tv"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="@id/system_settings_carousel_tv" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_hide_author_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_hide_author_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="隐藏关于作者"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/system_settings_hide_author_explain_tv"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="开启后隐藏我的页面的关于作者入口"
+          android:textColor="@color/grey"
+          android:textSize="14sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/system_settings_hide_author_tv" />
+
+        <Switch
+          android:id="@+id/system_settings_hide_author_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintBottom_toBottomOf="@+id/system_settings_hide_author_explain_tv"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="@id/system_settings_hide_author_tv" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_hide_github_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_hide_github_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="隐藏开源项目"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/system_settings_hide_github_explain_tv"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="开启后隐藏我的页面的开源项目入口"
+          android:textColor="@color/grey"
+          android:textSize="14sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/system_settings_hide_github_tv" />
+
+        <Switch
+          android:id="@+id/system_settings_hide_github_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintBottom_toBottomOf="@+id/system_settings_hide_github_explain_tv"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="@id/system_settings_hide_github_tv" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/system_settings_slide_edge_return_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <TextView
+          android:id="@+id/system_settings_slide_edge_return_tv"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="网页边缘滑动返回"
+          android:textColor="@color/black"
+          android:textSize="20sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/system_settings_slide_edge_return_explain_tv"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="开启后网页仅在边缘可触发滑动返回，避免左右滑动代码时误触发滑动返回"
+          android:textColor="@color/grey"
+          android:textSize="14sp"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/system_settings_slide_edge_return_tv" />
+
+        <Switch
+          android:id="@+id/system_settings_slide_edge_return_swt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginEnd="20dp"
+          android:checked="false"
+          app:layout_constraintBottom_toBottomOf="@+id/system_settings_slide_edge_return_explain_tv"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="@id/system_settings_slide_edge_return_tv" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    </LinearLayout>
+
+  </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
