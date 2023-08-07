@@ -349,7 +349,7 @@ class MainActivity : AppCompatActivity() {
           ).show()
 
           val defaultImageDrawable =
-            ContextCompat.getDrawable(this@MainActivity, R.drawable.fail)
+            ContextCompat.getDrawable(this@MainActivity, R.drawable.defaultimage)
           bannerAdapter.setDefaultImage(defaultImageDrawable)
 
           val emptyBannerList = mutableListOf<BannerItem>()
