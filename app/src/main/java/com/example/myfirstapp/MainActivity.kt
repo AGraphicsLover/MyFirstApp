@@ -4,12 +4,14 @@ import ArticleItem
 import BannerItem
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
   private lateinit var recyclerView: RecyclerView
   private lateinit var articleAdapter: ArticleAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+  private lateinit var sharedPreferencesSystemSettings: SharedPreferences
 
   private var currentPage = 0
   private val pageSize = 3
@@ -42,6 +45,9 @@ class MainActivity : AppCompatActivity() {
 
   private var progressDialog: ProgressDialog? = null
 
+  private var isDarkMode: Boolean = false
+  private var isFollowDarkMode: Boolean = false
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -50,6 +56,11 @@ class MainActivity : AppCompatActivity() {
     recyclerView.layoutManager = LinearLayoutManager(this)
     articleAdapter = ArticleAdapter()
     recyclerView.adapter = articleAdapter
+    sharedPreferencesSystemSettings = getSharedPreferences("system_settings", MODE_PRIVATE)
+    isFollowDarkMode = sharedPreferencesSystemSettings.getBoolean("follow_dark_mode", false)
+    isDarkMode = sharedPreferencesSystemSettings.getBoolean("dark_mode", false)
+
+    updateAppTheme(isFollowDarkMode, isDarkMode)
 
     val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
     bottomNavigationView.setOnItemSelectedListener { item ->
@@ -161,6 +172,16 @@ class MainActivity : AppCompatActivity() {
     // 第一次加载数据
     fetchArticleData()
 
+  }
+
+  private fun updateAppTheme(isFollowDarkMode: Boolean, isDarkMode: Boolean) {
+    if (isFollowDarkMode) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    } else {
+      val nightMode =
+        if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+      AppCompatDelegate.setDefaultNightMode(nightMode)
+    }
   }
 
   private fun showProgressDialog() {

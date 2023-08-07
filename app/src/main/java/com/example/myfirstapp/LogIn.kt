@@ -34,7 +34,7 @@ class LogIn : AppCompatActivity() {
     val closeButton: ImageButton = findViewById(R.id.closeButton)
     closeButton.setOnClickListener {
       // 处理关闭按钮点击事件，例如返回上一个界面
-      onBackPressed()
+      finish()
     }
 
     loginButton = findViewById(R.id.activity_login_btn)
