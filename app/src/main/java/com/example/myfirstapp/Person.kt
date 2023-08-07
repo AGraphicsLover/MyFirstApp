@@ -25,6 +25,7 @@ class Person : AppCompatActivity() {
   private lateinit var personNightImageView: ImageView
   private lateinit var sharedPreferencesUserData: SharedPreferences
   private lateinit var sharedPreferencesSystemSettings: SharedPreferences
+  private lateinit var bottomNavigationView: BottomNavigationView
 
   private var username: String = ""
   private var isLogin: Boolean = false
@@ -59,12 +60,10 @@ class Person : AppCompatActivity() {
       editor.putBoolean("isLogin", false)
       editor.putString("username", "")
       editor.apply()
-
       updateUI(false, "")
       runOnUiThread {
         Toast.makeText(this@Person, "您已退出登录！", Toast.LENGTH_SHORT).show()
       }
-
       personAvatarLayout.setOnClickListener {
         val intent = Intent(this@Person, LogIn::class.java)
         startActivity(intent)
@@ -93,7 +92,12 @@ class Person : AppCompatActivity() {
       startActivity(intent)
     }
 
-    val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+    bottomNavigationView = findViewById(R.id.bottomNavigationView)
+    setupBottomNavigationView()
+    bottomNavigationView.selectedItemId = R.id.action_profile
+  }
+
+  private fun setupBottomNavigationView() {
     bottomNavigationView.setOnItemSelectedListener { item ->
       when (item.itemId) {
         R.id.action_home -> {
@@ -102,32 +106,24 @@ class Person : AppCompatActivity() {
           startActivity(intent)
           true
         }
-
         R.id.action_question -> {
           val intent = Intent(this, QuestionAnswer::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
-
         R.id.action_system -> {
           val intent = Intent(this, System::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
-
         R.id.action_profile -> {
           true
         }
-
         else -> false
       }
-
     }
-
-    bottomNavigationView.selectedItemId = R.id.action_profile
-
   }
 
   private fun updateAboutVisibility(isHideAuthor: Boolean) {

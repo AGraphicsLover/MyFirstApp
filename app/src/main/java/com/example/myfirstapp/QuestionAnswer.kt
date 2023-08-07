@@ -24,6 +24,7 @@ class QuestionAnswer : AppCompatActivity() {
   private lateinit var recyclerView: RecyclerView
   private lateinit var questionAdapter: QuestionAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+  private lateinit var bottomNavigationView: BottomNavigationView
 
   private var currentPage = 0
   private val pageSize = 3
@@ -39,39 +40,8 @@ class QuestionAnswer : AppCompatActivity() {
     questionAdapter = QuestionAdapter()
     recyclerView.adapter = questionAdapter
 
-    val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-    bottomNavigationView.setOnItemSelectedListener { item ->
-      when (item.itemId) {
-        R.id.action_home -> {
-          val intent = Intent(this, MainActivity::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_question -> {
-          true
-        }
-
-        R.id.action_system -> {
-          val intent = Intent(this, System::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_profile -> {
-          val intent = Intent(this, Person::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        else -> false
-      }
-
-    }
-
+    bottomNavigationView = findViewById(R.id.bottomNavigationView)
+    setupBottomNavigationView()
     bottomNavigationView.selectedItemId = R.id.action_question
 
     swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout2)
@@ -98,12 +68,37 @@ class QuestionAnswer : AppCompatActivity() {
         startActivity(intent)
       }
     })
-
-    // 添加上滑加载的逻辑
     setupRecyclerViewScrollListener()
-
-    // 第一次加载数据
     fetchQuestionData()
+  }
+
+  private fun setupBottomNavigationView() {
+    bottomNavigationView.setOnItemSelectedListener { item ->
+      when (item.itemId) {
+        R.id.action_home -> {
+          val intent = Intent(this, MainActivity::class.java)
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+          startActivity(intent)
+          true
+        }
+        R.id.action_question -> {
+          true
+        }
+        R.id.action_system -> {
+          val intent = Intent(this, System::class.java)
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+          startActivity(intent)
+          true
+        }
+        R.id.action_profile -> {
+          val intent = Intent(this, Person::class.java)
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+          startActivity(intent)
+          true
+        }
+        else -> false
+      }
+    }
   }
 
   private fun showProgressDialog() {

@@ -24,6 +24,7 @@ class LogIn : AppCompatActivity() {
   private lateinit var loginButton: Button
   private lateinit var usernameEditText: EditText
   private lateinit var passwordEditText: EditText
+  private lateinit var closeButton: ImageButton
 
   private var progressDialog: ProgressDialog? = null
 
@@ -31,7 +32,7 @@ class LogIn : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
 
-    val closeButton: ImageButton = findViewById(R.id.closeButton)
+    closeButton = findViewById(R.id.closeButton)
     closeButton.setOnClickListener {
       // 处理关闭按钮点击事件，例如返回上一个界面
       finish()
@@ -45,20 +46,16 @@ class LogIn : AppCompatActivity() {
       showProgressDialog()
       val username = usernameEditText.text.toString()
       val password = passwordEditText.text.toString()
-
       val client = OkHttpClient()
-
       val url = "https://www.wanandroid.com/user/login"
       val requestBody = FormBody.Builder()
         .add("username", username)
         .add("password", password)
         .build()
-
       val request = Request.Builder()
         .url(url)
         .post(requestBody)
         .build()
-
       client.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
           hideProgressDialog()
@@ -68,11 +65,11 @@ class LogIn : AppCompatActivity() {
             Toast.LENGTH_SHORT
           ).show()
         }
-//        {"data":{"admin":false,"chapterTops":[],"coinCount":10,"collectIds":[],"email":"","icon":"",
+
+        //        {"data":{"admin":false,"chapterTops":[],"coinCount":10,"collectIds":[],"email":"","icon":"",
 //          "id":151641,"nickname":"AGraphicsLover","password":"","publicName":"AGraphicsLover",
 //          "token":"","type":0,"username":"AGraphicsLover"},"errorCode":0,"errorMsg":""}
-
-        //        {"data":null,"errorCode":-1,"errorMsg":"账号密码不匹配！"}
+//        {"data":null,"errorCode":-1,"errorMsg":"账号密码不匹配！"}   以上为API接口返回的数据
         override fun onResponse(call: Call, response: Response) {
           hideProgressDialog()
           try {

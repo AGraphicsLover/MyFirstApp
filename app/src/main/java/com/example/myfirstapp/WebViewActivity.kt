@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 class WebViewActivity : AppCompatActivity() {
 
   private lateinit var backButton: ImageButton
+  private lateinit var webView: WebView
   private var dx: Float = 0f
   private var dy: Float = 0f
   private var isMoving = false
@@ -19,9 +20,16 @@ class WebViewActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_web_view)
 
-    val webView: WebView = findViewById(R.id.webView)
+    webView = findViewById(R.id.webView)
     backButton = findViewById(R.id.backButton)
+    loadUrl()
+    setupBackButton()
+    backButton.setOnClickListener {
+      finish()
+    }
+  }
 
+  private fun loadUrl() {
     val url = intent.getStringExtra("url")
     webView.settings.javaScriptEnabled = true
     if (url != null) {
@@ -29,11 +37,9 @@ class WebViewActivity : AppCompatActivity() {
     } else {
       Toast.makeText(this@WebViewActivity, "空网页！", Toast.LENGTH_SHORT).show()
     }
+  }
 
-    backButton.setOnClickListener {
-      finish()
-    }
-
+  private fun setupBackButton() {
     backButton.setOnTouchListener { v, event ->
       when (event.action) {
         MotionEvent.ACTION_DOWN -> {
@@ -83,6 +89,5 @@ class WebViewActivity : AppCompatActivity() {
       }
       true
     }
-
   }
 }

@@ -32,19 +32,16 @@ class MainActivity : AppCompatActivity() {
   private lateinit var articleAdapter: ArticleAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
   private lateinit var sharedPreferencesSystemSettings: SharedPreferences
-
-  private var currentPage = 0
-  private val pageSize = 3
-
   private lateinit var viewPager: ViewPager2
   private lateinit var bannerAdapter: BannerAdapter
   private lateinit var bannerRunnable: Runnable
+  private lateinit var bottomNavigationView: BottomNavigationView
   private val bannerHandler = Handler(Looper.getMainLooper())
+  private val pageSize = 3
   private val bannerDelayTime: Long = 3000
   private var isBannerAutoScrollEnabled = true
-
+  private var currentPage = 0
   private var progressDialog: ProgressDialog? = null
-
   private var isDarkMode: Boolean = false
   private var isFollowDarkMode: Boolean = false
 
@@ -59,44 +56,10 @@ class MainActivity : AppCompatActivity() {
     sharedPreferencesSystemSettings = getSharedPreferences("system_settings", MODE_PRIVATE)
     isFollowDarkMode = sharedPreferencesSystemSettings.getBoolean("follow_dark_mode", false)
     isDarkMode = sharedPreferencesSystemSettings.getBoolean("dark_mode", false)
-
     updateAppTheme(isFollowDarkMode, isDarkMode)
-
-    val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-    bottomNavigationView.setOnItemSelectedListener { item ->
-      when (item.itemId) {
-        R.id.action_home -> {
-          true
-        }
-
-        R.id.action_question -> {
-          val intent = Intent(this, QuestionAnswer::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_system -> {
-          val intent = Intent(this, System::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_profile -> {
-          val intent = Intent(this, Person::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        else -> false
-      }
-
-    }
-
+    bottomNavigationView = findViewById(R.id.bottomNavigationView)
+    setupbottomNavigationView()
     bottomNavigationView.selectedItemId = R.id.action_home
-
     swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
     swipeRefreshLayout.setOnRefreshListener {
       currentPage = 0
@@ -118,7 +81,6 @@ class MainActivity : AppCompatActivity() {
       bannerHandler.postDelayed(bannerRunnable, bannerDelayTime)
     }
     viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-
       override fun onPageScrollStateChanged(state: Int) {
         when (state) {
           ViewPager2.SCROLL_STATE_IDLE -> {
@@ -140,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
     articleAdapter.setOnLikeButtonClickListener(object : ArticleAdapter.OnLikeButtonClickListener {
       override fun onLikeButtonClick(articleItem: ArticleItem) {
-        articleItem?.isLiked = !(articleItem.isLiked)
+        articleItem.isLiked = !(articleItem.isLiked)
         articleAdapter.updateLikeOfArticleItem(articleItem)
       }
     })
@@ -163,15 +125,38 @@ class MainActivity : AppCompatActivity() {
         }
       }
     })
-
     fetchBannerData()
-
-    // 添加上滑加载的逻辑
     setupRecyclerViewScrollListener()
-
-    // 第一次加载数据
     fetchArticleData()
+  }
 
+  private fun setupbottomNavigationView() {
+    bottomNavigationView.setOnItemSelectedListener { item ->
+      when (item.itemId) {
+        R.id.action_home -> {
+          true
+        }
+        R.id.action_question -> {
+          val intent = Intent(this, QuestionAnswer::class.java)
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+          startActivity(intent)
+          true
+        }
+        R.id.action_system -> {
+          val intent = Intent(this, System::class.java)
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+          startActivity(intent)
+          true
+        }
+        R.id.action_profile -> {
+          val intent = Intent(this, Person::class.java)
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+          startActivity(intent)
+          true
+        }
+        else -> false
+      }
+    }
   }
 
   private fun updateAppTheme(isFollowDarkMode: Boolean, isDarkMode: Boolean) {
@@ -206,6 +191,7 @@ class MainActivity : AppCompatActivity() {
 
     client.newCall(request).enqueue(object : Callback {
       override fun onFailure(call: Call, e: IOException) {
+        hideProgressDialog()
         runOnUiThread {
           Toast.makeText(
             this@MainActivity,
@@ -217,6 +203,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onResponse(call: Call, response: Response) {
+        hideProgressDialog()
         val responseData = response.body?.string()
         if (responseData != null) {
           val jsonObject = JSONObject(responseData)
@@ -231,7 +218,7 @@ class MainActivity : AppCompatActivity() {
               val author = articleObject.optString("author")
               val shareUser = articleObject.optString("shareUser")
               val niceDate = articleObject.optString("niceDate")
-              val chapterName = articleObject.optString("chapter")
+              val chapterName = articleObject.optString("chapterName")
               val superChapterName = articleObject.optString("superChapterName")
               val link = articleObject.optString("link")
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
@@ -249,8 +236,6 @@ class MainActivity : AppCompatActivity() {
               )
             }
 
-            hideProgressDialog()
-
             runOnUiThread {
               if (currentPage == 0) {
                 articleAdapter.setData(articleList)
@@ -266,7 +251,6 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun fetchArticleData() {
-
     val client = OkHttpClient()
     val request = Request.Builder()
       .url("https://www.wanandroid.com/article/list/$currentPage/json")
