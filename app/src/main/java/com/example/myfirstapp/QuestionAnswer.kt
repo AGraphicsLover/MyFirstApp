@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -43,6 +44,7 @@ class QuestionAnswer : AppCompatActivity() {
     bottomNavigationView = findViewById(R.id.bottomNavigationView)
     setupBottomNavigationView()
     bottomNavigationView.selectedItemId = R.id.action_question
+    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
 
     swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout2)
     swipeRefreshLayout.setOnRefreshListener {
@@ -81,21 +83,25 @@ class QuestionAnswer : AppCompatActivity() {
           startActivity(intent)
           true
         }
+
         R.id.action_question -> {
           true
         }
+
         R.id.action_system -> {
           val intent = Intent(this, System::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         R.id.action_profile -> {
           val intent = Intent(this, Person::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         else -> false
       }
     }

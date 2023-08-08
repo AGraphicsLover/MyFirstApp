@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 
 class System : AppCompatActivity() {
   private lateinit var bottomNavigationView: BottomNavigationView
@@ -14,6 +15,7 @@ class System : AppCompatActivity() {
     bottomNavigationView = findViewById(R.id.bottomNavigationView)
     setupBottomNavigationView()
     bottomNavigationView.selectedItemId = R.id.action_system
+    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
   }
 
   private fun setupBottomNavigationView() {
@@ -25,21 +27,25 @@ class System : AppCompatActivity() {
           startActivity(intent)
           true
         }
+
         R.id.action_question -> {
           val intent = Intent(this, QuestionAnswer::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         R.id.action_system -> {
           true
         }
+
         R.id.action_profile -> {
           val intent = Intent(this, Person::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         else -> false
       }
     }

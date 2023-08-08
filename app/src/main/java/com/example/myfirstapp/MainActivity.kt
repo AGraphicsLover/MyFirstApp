@@ -1,23 +1,20 @@
 package com.example.myfirstapp
 
 import ArticleItem
-import BannerItem
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Html
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -31,15 +28,10 @@ class MainActivity : AppCompatActivity() {
   private lateinit var recyclerView: RecyclerView
   private lateinit var articleAdapter: ArticleAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-  private lateinit var sharedPreferencesSystemSettings: SharedPreferences
-  private lateinit var viewPager: ViewPager2
-  private lateinit var bannerAdapter: BannerAdapter
-  private lateinit var bannerRunnable: Runnable
+  private lateinit var viewPagerAdapter: ViewPagerAdapter
   private lateinit var bottomNavigationView: BottomNavigationView
-  private val bannerHandler = Handler(Looper.getMainLooper())
+  private lateinit var sharedPreferencesSystemSettings: SharedPreferences
   private val pageSize = 3
-  private val bannerDelayTime: Long = 3000
-  private var isBannerAutoScrollEnabled = true
   private var currentPage = 0
   private var progressDialog: ProgressDialog? = null
   private var isDarkMode: Boolean = false
@@ -49,10 +41,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    recyclerView = findViewById(R.id.recyclerView)
-    recyclerView.layoutManager = LinearLayoutManager(this)
-    articleAdapter = ArticleAdapter()
-    recyclerView.adapter = articleAdapter
     sharedPreferencesSystemSettings = getSharedPreferences("system_settings", MODE_PRIVATE)
     isFollowDarkMode = sharedPreferencesSystemSettings.getBoolean("follow_dark_mode", false)
     isDarkMode = sharedPreferencesSystemSettings.getBoolean("dark_mode", false)
@@ -60,45 +48,17 @@ class MainActivity : AppCompatActivity() {
     bottomNavigationView = findViewById(R.id.bottomNavigationView)
     setupbottomNavigationView()
     bottomNavigationView.selectedItemId = R.id.action_home
+    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
+    recyclerView = findViewById(R.id.recyclerView)
+    recyclerView.layoutManager = LinearLayoutManager(this)
+    articleAdapter = ArticleAdapter()
+    viewPagerAdapter = ViewPagerAdapter(this)
+    recyclerView.adapter = ConcatAdapter(viewPagerAdapter, articleAdapter)
     swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
     swipeRefreshLayout.setOnRefreshListener {
       currentPage = 0
-      runOnUiThread {
-        articleAdapter.setDataClear()
-      }
       fetchArticleData()
     }
-
-    viewPager = findViewById(R.id.viewPager)
-    bannerAdapter = BannerAdapter()
-    viewPager.adapter = bannerAdapter
-    bannerRunnable = Runnable {
-      var nextItem = viewPager.currentItem + 1
-      if (nextItem >= (viewPager.adapter?.itemCount ?: 0)) {
-        nextItem = 0
-      }
-      viewPager.currentItem = nextItem
-      bannerHandler.postDelayed(bannerRunnable, bannerDelayTime)
-    }
-    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-      override fun onPageScrollStateChanged(state: Int) {
-        when (state) {
-          ViewPager2.SCROLL_STATE_IDLE -> {
-            if (!isBannerAutoScrollEnabled) {
-              isBannerAutoScrollEnabled = true
-              startAutoScroll()
-            }
-          }
-
-          ViewPager2.SCROLL_STATE_DRAGGING -> {
-            isBannerAutoScrollEnabled = false
-            stopAutoScroll()
-          }
-
-          ViewPager2.SCROLL_STATE_SETTLING -> {}
-        }
-      }
-    })
 
     articleAdapter.setOnLikeButtonClickListener(object : ArticleAdapter.OnLikeButtonClickListener {
       override fun onLikeButtonClick(articleItem: ArticleItem) {
@@ -114,18 +74,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
       }
     })
-
-    bannerAdapter.setOnBannerItemClickListener(object : BannerAdapter.OnBannerItemClickListener {
-      override fun onBannerItemClick(position: Int) {
-        val bannerItem = bannerAdapter.getItemAt(position)
-        if (bannerItem != null) {
-          val intent = Intent(this@MainActivity, WebViewActivity::class.java)
-          intent.putExtra("url", bannerItem.url)
-          startActivity(intent)
-        }
-      }
-    })
-    fetchBannerData()
     setupRecyclerViewScrollListener()
     fetchArticleData()
   }
@@ -136,24 +84,28 @@ class MainActivity : AppCompatActivity() {
         R.id.action_home -> {
           true
         }
+
         R.id.action_question -> {
           val intent = Intent(this, QuestionAnswer::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         R.id.action_system -> {
           val intent = Intent(this, System::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         R.id.action_profile -> {
           val intent = Intent(this, Person::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         else -> false
       }
     }
@@ -331,70 +283,4 @@ class MainActivity : AppCompatActivity() {
       }
     })
   }
-
-  private fun fetchBannerData() {
-    val client = OkHttpClient()
-    val request = Request.Builder()
-      .url("https://www.wanandroid.com/banner/json")
-      .build()
-
-    client.newCall(request).enqueue(object : Callback {
-      override fun onFailure(call: Call, e: IOException) {
-        runOnUiThread {
-          // 显示错误信息，通过 Toast提示用户
-          Toast.makeText(
-            this@MainActivity,
-            "网络请求失败，请检查网络连接",
-            Toast.LENGTH_SHORT
-          ).show()
-
-          val defaultImageDrawable =
-            ContextCompat.getDrawable(this@MainActivity, R.drawable.defaultimage)
-          bannerAdapter.setDefaultImage(defaultImageDrawable)
-
-          val emptyBannerList = mutableListOf<BannerItem>()
-          for (i in 0..2) {
-            emptyBannerList.add(BannerItem("", "", "", ""))
-          }
-          bannerAdapter.setData(emptyBannerList)
-          startAutoScroll()
-        }
-      }
-
-      override fun onResponse(call: Call, response: Response) {
-        val responseData = response.body?.string()
-        if (responseData != null) {
-          val jsonObject = JSONObject(responseData)
-          val dataArray = jsonObject.optJSONArray("data")
-
-          if (dataArray != null) {
-            val bannerList = mutableListOf<BannerItem>()
-
-            for (i in 0 until dataArray.length()) {
-              val bannerObject = dataArray.getJSONObject(i)
-              val title = bannerObject.optString("title")
-              val desc = bannerObject.optString("desc")
-              val url = bannerObject.optString("url")
-              val imagePath = bannerObject.optString("imagePath")
-              bannerList.add(BannerItem(title, desc, imagePath, url))
-            }
-
-            runOnUiThread {
-              bannerAdapter.setData(bannerList)
-              startAutoScroll()
-            }
-          }
-        }
-      }
-    })
-  }
-
-  private fun startAutoScroll() {
-    bannerHandler.postDelayed(bannerRunnable, bannerDelayTime)
-  }
-
-  private fun stopAutoScroll() {
-    bannerHandler.removeCallbacks(bannerRunnable)
-  }
-
 }

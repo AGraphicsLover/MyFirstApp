@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 
 class Person : AppCompatActivity() {
 
@@ -95,6 +96,7 @@ class Person : AppCompatActivity() {
     bottomNavigationView = findViewById(R.id.bottomNavigationView)
     setupBottomNavigationView()
     bottomNavigationView.selectedItemId = R.id.action_profile
+    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
   }
 
   private fun setupBottomNavigationView() {
@@ -106,21 +108,25 @@ class Person : AppCompatActivity() {
           startActivity(intent)
           true
         }
+
         R.id.action_question -> {
           val intent = Intent(this, QuestionAnswer::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         R.id.action_system -> {
           val intent = Intent(this, System::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
+
         R.id.action_profile -> {
           true
         }
+
         else -> false
       }
     }

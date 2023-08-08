@@ -36,37 +36,21 @@
 
   </androidx.appcompat.widget.Toolbar>
 
-  <LinearLayout
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="40dp"
+    android:background="@color/bgPurple">
 
-    <!-- ViewPager 包含 Banner 和 RecyclerView -->
-    <androidx.viewpager2.widget.ViewPager2
-      android:id="@+id/viewPager"
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recyclerView"
       android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_marginTop="40dp"
-      android:layout_weight="0.3"
-      android:background="@color/bgPurple" />
+      android:layout_height="match_parent" />
 
-    <!-- SwipeRefreshLayout 包含 RecyclerView -->
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-      android:id="@+id/swipeRefreshLayout"
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="0.7"
-      android:background="@color/bgPurple">
-
-      <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-  </LinearLayout>
+  <!--  </LinearLayout>-->
 
   <com.google.android.material.bottomnavigation.BottomNavigationView
     android:id="@+id/bottomNavigationView"

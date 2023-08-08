@@ -4,7 +4,8 @@ import ArticleItem
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -46,11 +47,6 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() 
     return data.size
   }
 
-  fun setDataClear() {
-    data.clear()
-    notifyDataSetChanged()
-  }
-
   fun setData(articleList: List<ArticleItem>) {
     data.clear()
     data.addAll(articleList)
@@ -75,12 +71,13 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() 
     private val authorTextView: TextView = itemView.findViewById(R.id.authorTextView)
     private val updateTimeTextView: TextView = itemView.findViewById(R.id.updateTimeTextView)
     private val sourceTextView: TextView = itemView.findViewById(R.id.sourceTextView)
-    private val likeButton: ImageButton = itemView.findViewById(R.id.likeButton)
-    private val chapterNameTextView:TextView = itemView.findViewById(R.id.chapterNameTextView)
+    private val likeFrameLayout: FrameLayout = itemView.findViewById(R.id.item_article_like_layout)
+    private val likeImageView: ImageView = itemView.findViewById(R.id.item_article_like_iv)
+    private val chapterNameTextView: TextView = itemView.findViewById(R.id.chapterNameTextView)
     fun bind(articleItem: ArticleItem) {
       titleTextView.text = articleItem.title
-      val author: String = if (articleItem.author == "") articleItem.shareUser else articleItem
-        .author
+      val author: String =
+        if (articleItem.author == "") articleItem.shareUser else articleItem.author
       authorTextView.text = author
       updateTimeTextView.text = articleItem.niceDate
       sourceTextView.text = articleItem.superChapterName
@@ -88,13 +85,12 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() 
       itemView.setOnClickListener {
         onItemClickListener?.onItemClick(articleItem)
       }
-      likeButton.setOnClickListener {
+      likeFrameLayout.setOnClickListener {
         likeButtonClickListener?.onLikeButtonClick(articleItem)
       }
 
       val imageRes = if (articleItem.isLiked) R.drawable.like else R.drawable.unlike
-      likeButton.setImageResource(imageRes)
-
+      likeImageView.setImageResource(imageRes)
     }
   }
 }

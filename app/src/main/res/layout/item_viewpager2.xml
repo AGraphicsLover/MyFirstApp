@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/item_viewpager2"
+  android:layout_width="match_parent"
+  android:layout_height="200dp"
+  android:background="@color/bgPurple">
+
+  <!-- ViewPager 包含 Banner 和 RecyclerView -->
+  <androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/header_viewPager"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@color/bgPurple" />
+
+</RelativeLayout>

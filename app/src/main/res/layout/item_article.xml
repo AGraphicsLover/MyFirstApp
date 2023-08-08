@@ -58,17 +58,25 @@
     app:layout_constraintStart_toEndOf="@+id/sourceTextView"
     app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
-  <ImageButton
-    android:id="@+id/likeButton"
-    android:layout_width="25dp"
-    android:layout_height="25dp"
-    android:layout_marginTop="3dp"
-    android:background="@android:color/transparent"
-    android:contentDescription="@string/collect"
-    android:scaleType="fitXY"
-    android:src="@drawable/unlike"
+  <FrameLayout
+    android:id="@+id/item_article_like_layout"
+    android:layout_width="45dp"
+    android:layout_height="45dp"
+    android:padding="10dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+    app:layout_constraintTop_toBottomOf="@id/titleTextView">
+
+    <ImageView
+      android:id="@+id/item_article_like_iv"
+      android:layout_width="25dp"
+      android:layout_height="25dp"
+      android:background="@android:color/transparent"
+      android:contentDescription="@string/collect"
+      android:scaleType="fitXY"
+      android:src="@drawable/unlike" />
+
+  </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
