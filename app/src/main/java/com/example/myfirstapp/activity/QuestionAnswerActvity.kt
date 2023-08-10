@@ -1,6 +1,5 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.activity
 
-import QuestionItem
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.myfirstapp.R
+import com.example.myfirstapp.adapter.QuestionAdapter
+import com.example.myfirstapp.model.QuestionBean
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import okhttp3.Call
@@ -20,7 +22,7 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
-class QuestionAnswer : AppCompatActivity() {
+class QuestionAnswerActvity : AppCompatActivity() {
 
   private lateinit var recyclerView: RecyclerView
   private lateinit var questionAdapter: QuestionAdapter
@@ -57,16 +59,16 @@ class QuestionAnswer : AppCompatActivity() {
 
     questionAdapter.setOnLikeButtonClickListener(object :
       QuestionAdapter.OnLikeButtonClickListener {
-      override fun onLikeButtonClick(questionItem: QuestionItem) {
-        questionItem.isLiked = !(questionItem.isLiked)
-        questionAdapter.updateLikeOfArticleItem(questionItem)
+      override fun onLikeButtonClick(questionBean: QuestionBean) {
+        questionBean.isLiked = !(questionBean.isLiked)
+        questionAdapter.updateLikeOfArticleItem(questionBean)
       }
     })
 
     questionAdapter.setOnItemClickListener(object : QuestionAdapter.OnItemClickListener {
-      override fun onItemClick(questionItem: QuestionItem) {
-        val intent = Intent(this@QuestionAnswer, WebViewActivity::class.java)
-        intent.putExtra("url", questionItem.link)
+      override fun onItemClick(questionBean: QuestionBean) {
+        val intent = Intent(this@QuestionAnswerActvity, WebViewActivity::class.java)
+        intent.putExtra("url", questionBean.link)
         startActivity(intent)
       }
     })
@@ -89,14 +91,14 @@ class QuestionAnswer : AppCompatActivity() {
         }
 
         R.id.action_system -> {
-          val intent = Intent(this, System::class.java)
+          val intent = Intent(this, SystemActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
 
         R.id.action_profile -> {
-          val intent = Intent(this, Person::class.java)
+          val intent = Intent(this, PersonActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
@@ -131,7 +133,7 @@ class QuestionAnswer : AppCompatActivity() {
       override fun onFailure(call: Call, e: IOException) {
         runOnUiThread {
           Toast.makeText(
-            this@QuestionAnswer,
+            this@QuestionAnswerActvity,
             "网络请求失败，请检查网络连接",
             Toast.LENGTH_SHORT
           ).show()
@@ -146,7 +148,7 @@ class QuestionAnswer : AppCompatActivity() {
           val dataArray = jsonObject.optJSONObject("data")?.optJSONArray("datas")
 
           if (dataArray != null) {
-            val questionList = mutableListOf<QuestionItem>()
+            val questionList = mutableListOf<QuestionBean>()
 
             for (i in 0 until dataArray.length()) {
               val questionObject = dataArray.getJSONObject(i)
@@ -160,7 +162,7 @@ class QuestionAnswer : AppCompatActivity() {
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
               val desc = Html.fromHtml(descOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
               questionList.add(
-                QuestionItem(
+                QuestionBean(
                   title,
                   author,
                   niceDate,
@@ -200,7 +202,7 @@ class QuestionAnswer : AppCompatActivity() {
       override fun onFailure(call: Call, e: IOException) {
         runOnUiThread {
           Toast.makeText(
-            this@QuestionAnswer,
+            this@QuestionAnswerActvity,
             "网络请求失败，请检查网络连接",
             Toast.LENGTH_SHORT
           ).show()
@@ -215,7 +217,7 @@ class QuestionAnswer : AppCompatActivity() {
           val dataArray = jsonObject.optJSONObject("data")?.optJSONArray("datas")
 
           if (dataArray != null) {
-            val questionList = mutableListOf<QuestionItem>()
+            val questionList = mutableListOf<QuestionBean>()
 
             for (i in 0 until dataArray.length()) {
               val questionObject = dataArray.getJSONObject(i)
@@ -229,7 +231,7 @@ class QuestionAnswer : AppCompatActivity() {
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
               val desc = Html.fromHtml(descOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
               questionList.add(
-                QuestionItem(
+                QuestionBean(
                   title,
                   author,
                   niceDate,

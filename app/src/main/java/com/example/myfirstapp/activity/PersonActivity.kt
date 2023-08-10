@@ -1,4 +1,4 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.activity
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,10 +12,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.myfirstapp.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 
-class Person : AppCompatActivity() {
+class PersonActivity : AppCompatActivity() {
 
   private lateinit var logInTv: TextView
   private lateinit var logOutBtn: Button
@@ -63,10 +64,10 @@ class Person : AppCompatActivity() {
       editor.apply()
       updateUI(false, "")
       runOnUiThread {
-        Toast.makeText(this@Person, "您已退出登录！", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@PersonActivity, "您已退出登录！", Toast.LENGTH_SHORT).show()
       }
       personAvatarLayout.setOnClickListener {
-        val intent = Intent(this@Person, LogIn::class.java)
+        val intent = Intent(this@PersonActivity, LogInActivity::class.java)
         startActivity(intent)
       }
     }
@@ -78,18 +79,18 @@ class Person : AppCompatActivity() {
     if (isLogin) {
       personAvatarLayout.setOnClickListener {
         runOnUiThread {
-          Toast.makeText(this@Person, "您已经登录啦！", Toast.LENGTH_SHORT).show()
+          Toast.makeText(this@PersonActivity, "您已经登录啦！", Toast.LENGTH_SHORT).show()
         }
       }
     } else {
       personAvatarLayout.setOnClickListener {
-        val intent = Intent(this@Person, LogIn::class.java)
+        val intent = Intent(this@PersonActivity, LogInActivity::class.java)
         startActivity(intent)
       }
     }
 
     personSettingLayout.setOnClickListener {
-      val intent = Intent(this@Person, SystemSettings::class.java)
+      val intent = Intent(this@PersonActivity, SystemSettingsActivity::class.java)
       startActivity(intent)
     }
 
@@ -110,14 +111,14 @@ class Person : AppCompatActivity() {
         }
 
         R.id.action_question -> {
-          val intent = Intent(this, QuestionAnswer::class.java)
+          val intent = Intent(this, QuestionAnswerActvity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
 
         R.id.action_system -> {
-          val intent = Intent(this, System::class.java)
+          val intent = Intent(this, SystemActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
@@ -161,7 +162,7 @@ class Person : AppCompatActivity() {
     super.onResume()
     personNightImageView.setOnClickListener {
       if (sharedPreferencesSystemSettings.getBoolean("follow_dark_mode", false)) {
-        Toast.makeText(this@Person, "当前为跟随系统暗色模式，无法修改主题哦！", Toast.LENGTH_SHORT)
+        Toast.makeText(this@PersonActivity, "当前为跟随系统暗色模式，无法修改主题哦！", Toast.LENGTH_SHORT)
           .show()
       } else {
         isDarkMode = !isDarkMode

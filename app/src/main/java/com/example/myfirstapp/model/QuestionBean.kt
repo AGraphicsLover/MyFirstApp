@@ -1,4 +1,6 @@
-data class QuestionItem(
+package com.example.myfirstapp.model
+
+data class QuestionBean(
   val title: String,
   val author: String,
   val niceDate: String,

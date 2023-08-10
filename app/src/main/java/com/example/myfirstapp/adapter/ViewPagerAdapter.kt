@@ -1,6 +1,6 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.adapter
 
-import BannerItem
+import com.example.myfirstapp.model.BannerBean
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myfirstapp.R
+import com.example.myfirstapp.activity.WebViewActivity
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -27,7 +29,7 @@ class ViewPagerAdapter(private val context: Context) :
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
-  ): ViewPagerAdapter.HeaderViewHolder {
+  ): HeaderViewHolder {
     val view = LayoutInflater.from(parent.context).inflate(R.layout.item_viewpager2, parent, false)
     return HeaderViewHolder(view)
   }
@@ -102,9 +104,9 @@ class ViewPagerAdapter(private val context: Context) :
           val defaultImageDrawable =
             ContextCompat.getDrawable(context, R.drawable.defaultimage)
           bannerAdapter.setDefaultImage(defaultImageDrawable)
-          val emptyBannerList = mutableListOf<BannerItem>()
+          val emptyBannerList = mutableListOf<BannerBean>()
           for (i in 0..2) {
-            emptyBannerList.add(BannerItem("", "", "", ""))
+            emptyBannerList.add(BannerBean("", "", "", ""))
           }
           (context as Activity).runOnUiThread {
             Toast.makeText(
@@ -124,7 +126,7 @@ class ViewPagerAdapter(private val context: Context) :
             val dataArray = jsonObject.optJSONArray("data")
 
             if (dataArray != null) {
-              val bannerList = mutableListOf<BannerItem>()
+              val bannerList = mutableListOf<BannerBean>()
 
               for (i in 0 until dataArray.length()) {
                 val bannerObject = dataArray.getJSONObject(i)
@@ -132,7 +134,7 @@ class ViewPagerAdapter(private val context: Context) :
                 val desc = bannerObject.optString("desc")
                 val url = bannerObject.optString("url")
                 val imagePath = bannerObject.optString("imagePath")
-                bannerList.add(BannerItem(title, desc, imagePath, url))
+                bannerList.add(BannerBean(title, desc, imagePath, url))
               }
               (context as Activity).runOnUiThread {
                 bannerAdapter.setData(bannerList)

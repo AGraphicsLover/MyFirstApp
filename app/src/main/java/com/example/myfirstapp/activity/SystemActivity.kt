@@ -1,12 +1,13 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myfirstapp.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 
-class System : AppCompatActivity() {
+class SystemActivity : AppCompatActivity() {
   private lateinit var bottomNavigationView: BottomNavigationView
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,7 +30,7 @@ class System : AppCompatActivity() {
         }
 
         R.id.action_question -> {
-          val intent = Intent(this, QuestionAnswer::class.java)
+          val intent = Intent(this, QuestionAnswerActvity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
@@ -40,7 +41,7 @@ class System : AppCompatActivity() {
         }
 
         R.id.action_profile -> {
-          val intent = Intent(this, Person::class.java)
+          val intent = Intent(this, PersonActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true

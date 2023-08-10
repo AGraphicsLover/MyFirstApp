@@ -1,10 +1,11 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.activity
 
 import android.os.Bundle
 import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myfirstapp.R
 
 class WebViewActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.example.myfirstapp.R
 
 class ArcView @JvmOverloads constructor(
   context: Context,

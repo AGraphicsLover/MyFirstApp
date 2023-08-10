@@ -1,6 +1,6 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.adapter
 
-import BannerItem
+import com.example.myfirstapp.model.BannerBean
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.myfirstapp.R
 
 class BannerAdapter : RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
-  private val data = mutableListOf<BannerItem>()
+  private val data = mutableListOf<BannerBean>()
   private var defaultImageDrawable: Drawable? = null
   private var onBannerItemClickListener: OnBannerItemClickListener? = null
 
@@ -33,7 +34,7 @@ class BannerAdapter : RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
     return data.size
   }
 
-  fun getItemAt(position: Int): BannerItem? {
+  fun getItemAt(position: Int): BannerBean? {
     if (position in 0 until data.size) {
       return data[position]
     }
@@ -52,7 +53,7 @@ class BannerAdapter : RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
     defaultImageDrawable = drawable
   }
 
-  fun setData(bannerList: List<BannerItem>) {
+  fun setData(bannerList: List<BannerBean>) {
     data.clear()
     data.addAll(bannerList)
     notifyDataSetChanged()
@@ -61,9 +62,9 @@ class BannerAdapter : RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
   inner class BannerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val bannerImageView: ImageView = itemView.findViewById(R.id.bannerImageView)
 
-    fun bind(bannerItem: BannerItem) {
+    fun bind(bannerBean: BannerBean) {
       Glide.with(itemView.context)
-        .load(bannerItem.imagePath)
+        .load(bannerBean.imagePath)
         .into(bannerImageView)
       bannerImageView.setOnClickListener {
         onBannerItemClickListener?.onBannerItemClick((adapterPosition))

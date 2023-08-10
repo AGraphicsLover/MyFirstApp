@@ -1,4 +1,4 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.activity
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import com.example.myfirstapp.R
 
-class SystemSettings : AppCompatActivity() {
+class SystemSettingsActivity : AppCompatActivity() {
 
   private lateinit var systemSettingsBackImageView: ImageView
   private lateinit var systemSettingsFollowDarkModeSwitch: Switch

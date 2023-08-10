@@ -1,8 +1,8 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.activity
 
-import ApiResponse
-import ApiServiceFactory
-import UserData
+import com.example.myfirstapp.model.ApiResponse
+import com.example.myfirstapp.api.ApiServiceFactory
+import com.example.myfirstapp.model.UserBean
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +12,12 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myfirstapp.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LogIn : AppCompatActivity() {
+class LogInActivity : AppCompatActivity() {
 
   private lateinit var loginButton: Button
   private lateinit var usernameEditText: EditText
@@ -44,15 +45,15 @@ class LogIn : AppCompatActivity() {
       val password = passwordEditText.text.toString()
 
       ApiServiceFactory.apiService.login(username, password).enqueue(object :
-        Callback<ApiResponse<UserData>> {
-        override fun onFailure(call: Call<ApiResponse<UserData>>, t: Throwable) {
+        Callback<ApiResponse<UserBean>> {
+        override fun onFailure(call: Call<ApiResponse<UserBean>>, t: Throwable) {
           hideProgressDialog()
-          Toast.makeText(this@LogIn, "网络请求失败，请检查网络连接", Toast.LENGTH_SHORT).show()
+          Toast.makeText(this@LogInActivity, "网络请求失败，请检查网络连接", Toast.LENGTH_SHORT).show()
         }
 
         override fun onResponse(
-          call: Call<ApiResponse<UserData>>,
-          response: Response<ApiResponse<UserData>>
+          call: Call<ApiResponse<UserBean>>,
+          response: Response<ApiResponse<UserBean>>
         ) {
           hideProgressDialog()
           val responseData = response.body()
@@ -67,8 +68,8 @@ class LogIn : AppCompatActivity() {
 
               val handler = Handler(mainLooper)
               handler.post {
-                Toast.makeText(this@LogIn, "欢迎，${userName}！", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this@LogIn, Person::class.java)
+                Toast.makeText(this@LogInActivity, "欢迎，${userName}！", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@LogInActivity, PersonActivity::class.java)
                 intent.putExtra("username", userName)
                 intent.putExtra("isLogin", true)
                 startActivity(intent)
@@ -77,7 +78,7 @@ class LogIn : AppCompatActivity() {
             } else {
               val errorMsg = responseData.errorMsg
               runOnUiThread {
-                Toast.makeText(this@LogIn, errorMsg, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LogInActivity, errorMsg, Toast.LENGTH_SHORT).show()
               }
             }
           }

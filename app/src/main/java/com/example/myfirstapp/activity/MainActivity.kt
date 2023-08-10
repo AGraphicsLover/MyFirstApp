@@ -1,6 +1,6 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.activity
 
-import ArticleItem
+import com.example.myfirstapp.model.ArticleBean
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.myfirstapp.adapter.ArticleAdapter
+import com.example.myfirstapp.R
+import com.example.myfirstapp.adapter.ViewPagerAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import okhttp3.Call
@@ -23,15 +26,18 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
+/**
+ * MainActivity
+ */
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var recyclerView: RecyclerView
+  private lateinit var mRecyclerView: RecyclerView
   private lateinit var articleAdapter: ArticleAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
   private lateinit var viewPagerAdapter: ViewPagerAdapter
   private lateinit var bottomNavigationView: BottomNavigationView
   private lateinit var sharedPreferencesSystemSettings: SharedPreferences
-  private val pageSize = 3
+  private val pageSize = 3  //
   private var currentPage = 0
   private var progressDialog: ProgressDialog? = null
   private var isDarkMode: Boolean = false
@@ -41,41 +47,37 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    sharedPreferencesSystemSettings = getSharedPreferences("system_settings", MODE_PRIVATE)
-    isFollowDarkMode = sharedPreferencesSystemSettings.getBoolean("follow_dark_mode", false)
-    isDarkMode = sharedPreferencesSystemSettings.getBoolean("dark_mode", false)
-    updateAppTheme(isFollowDarkMode, isDarkMode)
-    bottomNavigationView = findViewById(R.id.bottomNavigationView)
-    setupbottomNavigationView()
-    bottomNavigationView.selectedItemId = R.id.action_home
-    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
-    recyclerView = findViewById(R.id.recyclerView)
-    recyclerView.layoutManager = LinearLayoutManager(this)
-    articleAdapter = ArticleAdapter()
-    viewPagerAdapter = ViewPagerAdapter(this)
-    recyclerView.adapter = ConcatAdapter(viewPagerAdapter, articleAdapter)
-    swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
+    initConfig()
+    initView()
     swipeRefreshLayout.setOnRefreshListener {
       currentPage = 0
       fetchArticleData()
     }
-
-    articleAdapter.setOnLikeButtonClickListener(object : ArticleAdapter.OnLikeButtonClickListener {
-      override fun onLikeButtonClick(articleItem: ArticleItem) {
-        articleItem.isLiked = !(articleItem.isLiked)
-        articleAdapter.updateLikeOfArticleItem(articleItem)
-      }
-    })
-
-    articleAdapter.setOnItemClickListener(object : ArticleAdapter.OnItemClickListener {
-      override fun onItemClick(articleItem: ArticleItem) {
-        val intent = Intent(this@MainActivity, WebViewActivity::class.java)
-        intent.putExtra("url", articleItem.link)
-        startActivity(intent)
-      }
-    })
     setupRecyclerViewScrollListener()
     fetchArticleData()
+  }
+
+  private fun initView() {
+    bottomNavigationView = findViewById(R.id.bottomNavigationView)
+    mRecyclerView = findViewById(R.id.recyclerView)
+    swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
+
+    updateAppTheme(isFollowDarkMode, isDarkMode)
+    setupbottomNavigationView()
+    bottomNavigationView.selectedItemId = R.id.action_home
+    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
+
+    mRecyclerView.layoutManager = LinearLayoutManager(this)
+    articleAdapter = ArticleAdapter()
+    viewPagerAdapter = ViewPagerAdapter(this)
+    mRecyclerView.adapter = ConcatAdapter(viewPagerAdapter, articleAdapter)
+
+  }
+
+  private fun initConfig() {
+    sharedPreferencesSystemSettings = getSharedPreferences("system_settings", MODE_PRIVATE)
+    isFollowDarkMode = sharedPreferencesSystemSettings.getBoolean("follow_dark_mode", false)
+    isDarkMode = sharedPreferencesSystemSettings.getBoolean("dark_mode", false)
   }
 
   private fun setupbottomNavigationView() {
@@ -86,21 +88,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.action_question -> {
-          val intent = Intent(this, QuestionAnswer::class.java)
+          val intent = Intent(this, QuestionAnswerActvity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
 
         R.id.action_system -> {
-          val intent = Intent(this, System::class.java)
+          val intent = Intent(this, SystemActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
         }
 
         R.id.action_profile -> {
-          val intent = Intent(this, Person::class.java)
+          val intent = Intent(this, PersonActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           startActivity(intent)
           true
@@ -162,7 +164,7 @@ class MainActivity : AppCompatActivity() {
           val dataArray = jsonObject.optJSONObject("data")?.optJSONArray("datas")
 
           if (dataArray != null) {
-            val articleList = mutableListOf<ArticleItem>()
+            val articleList = mutableListOf<ArticleBean>()
 
             for (i in 0 until dataArray.length()) {
               val articleObject = dataArray.getJSONObject(i)
@@ -175,7 +177,7 @@ class MainActivity : AppCompatActivity() {
               val link = articleObject.optString("link")
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
               articleList.add(
-                ArticleItem(
+                ArticleBean(
                   title,
                   author,
                   shareUser,
@@ -227,7 +229,7 @@ class MainActivity : AppCompatActivity() {
           val dataArray = jsonObject.optJSONObject("data")?.optJSONArray("datas")
 
           if (dataArray != null) {
-            val articleList = mutableListOf<ArticleItem>()
+            val articleList = mutableListOf<ArticleBean>()
 
             for (i in 0 until dataArray.length()) {
               val articleObject = dataArray.getJSONObject(i)
@@ -240,7 +242,7 @@ class MainActivity : AppCompatActivity() {
               val link = articleObject.optString("link")
               val title = Html.fromHtml(titleOrigin, Html.FROM_HTML_MODE_LEGACY).toString()
               articleList.add(
-                ArticleItem(
+                ArticleBean(
                   title,
                   author,
                   shareUser,
@@ -268,7 +270,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun setupRecyclerViewScrollListener() {
-    recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+    mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
       override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 

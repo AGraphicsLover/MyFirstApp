@@ -1,4 +1,6 @@
-data class ArticleItem(
+package com.example.myfirstapp.model
+
+data class ArticleBean(
   val title: String,
   val author: String,
   val shareUser: String,

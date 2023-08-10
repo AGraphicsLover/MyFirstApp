@@ -1,4 +1,6 @@
-data class UserData(
+package com.example.myfirstapp.model
+
+data class UserBean(
   val admin: Boolean,
   val chapterTops: List<String>,
   val coinCount: Int,

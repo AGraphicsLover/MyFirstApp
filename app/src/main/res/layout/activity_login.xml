@@ -4,7 +4,7 @@
   android:layout_height="match_parent"
   android:background="@color/bgPurple">
 
-  <com.example.myfirstapp.ArcView
+  <com.example.myfirstapp.view.ArcView
     android:layout_width="match_parent"
     android:layout_height="330dp"
     app:arcHeight="100dp" />
