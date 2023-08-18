@@ -14,7 +14,7 @@ class StartPageActivity : AppCompatActivity() {
     setContentView(R.layout.activity_start_page)
 
     Handler().postDelayed({
-      val intent = Intent(this@StartPageActivity, MainActivity::class.java)
+      val intent = Intent(this@StartPageActivity, MyActivity::class.java)
       startActivity(intent)
       finish()
     }, delayTime)

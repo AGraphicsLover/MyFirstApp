@@ -4,16 +4,17 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.myfirstapp.R
 import com.example.myfirstapp.adapter.QuestionAdapter
 import com.example.myfirstapp.model.QuestionBean
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationBarView
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -22,41 +23,39 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
-class QuestionAnswerActvity : AppCompatActivity() {
+class QuestionFragment : Fragment() {
 
   private lateinit var recyclerView: RecyclerView
   private lateinit var questionAdapter: QuestionAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-  private lateinit var bottomNavigationView: BottomNavigationView
-
   private var currentPage = 0
   private val pageSize = 3
-
   private var progressDialog: ProgressDialog? = null
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_question_answer)
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val view = inflater.inflate(R.layout.fragment_question, container, false)
+    initView(view)
+    return view
+  }
 
-    recyclerView = findViewById(R.id.recyclerView2)
-    recyclerView.layoutManager = LinearLayoutManager(this)
+  private fun initView(view: View) {
+    recyclerView = view.findViewById(R.id.recyclerView2)
+    recyclerView.layoutManager = LinearLayoutManager(requireContext())
     questionAdapter = QuestionAdapter()
     recyclerView.adapter = questionAdapter
-
-    bottomNavigationView = findViewById(R.id.bottomNavigationView)
-    setupBottomNavigationView()
-    bottomNavigationView.selectedItemId = R.id.action_question
-    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
-
-    swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout2)
+    swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout2)
     swipeRefreshLayout.setOnRefreshListener {
       currentPage = 0
-      runOnUiThread {
-        questionAdapter.setDataClear()
+      if (isAdded) {
+        requireActivity().runOnUiThread {
+          questionAdapter.setDataClear()
+        }
       }
       fetchQuestionData()
     }
-
     questionAdapter.setOnLikeButtonClickListener(object :
       QuestionAdapter.OnLikeButtonClickListener {
       override fun onLikeButtonClick(questionBean: QuestionBean) {
@@ -64,10 +63,9 @@ class QuestionAnswerActvity : AppCompatActivity() {
         questionAdapter.updateLikeOfArticleItem(questionBean)
       }
     })
-
     questionAdapter.setOnItemClickListener(object : QuestionAdapter.OnItemClickListener {
       override fun onItemClick(questionBean: QuestionBean) {
-        val intent = Intent(this@QuestionAnswerActvity, WebViewActivity::class.java)
+        val intent = Intent(requireContext(), WebViewActivity::class.java)
         intent.putExtra("url", questionBean.link)
         startActivity(intent)
       }
@@ -76,42 +74,9 @@ class QuestionAnswerActvity : AppCompatActivity() {
     fetchQuestionData()
   }
 
-  private fun setupBottomNavigationView() {
-    bottomNavigationView.setOnItemSelectedListener { item ->
-      when (item.itemId) {
-        R.id.action_home -> {
-          val intent = Intent(this, MainActivity::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_question -> {
-          true
-        }
-
-        R.id.action_system -> {
-          val intent = Intent(this, SystemActivity::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_profile -> {
-          val intent = Intent(this, PersonActivity::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        else -> false
-      }
-    }
-  }
-
   private fun showProgressDialog() {
     if (progressDialog == null) {
-      progressDialog = ProgressDialog(this)
+      progressDialog = ProgressDialog(requireContext())
       progressDialog?.setMessage("正在加载中...")
       progressDialog?.setCancelable(false)
     }
@@ -128,16 +93,17 @@ class QuestionAnswerActvity : AppCompatActivity() {
     val request = Request.Builder()
       .url("https://wanandroid.com/wenda/list/$currentPage/json")
       .build()
-
     client.newCall(request).enqueue(object : Callback {
       override fun onFailure(call: Call, e: IOException) {
-        runOnUiThread {
-          Toast.makeText(
-            this@QuestionAnswerActvity,
-            "网络请求失败，请检查网络连接",
-            Toast.LENGTH_SHORT
-          ).show()
-          swipeRefreshLayout.isRefreshing = false
+        if (isAdded) {
+          requireActivity().runOnUiThread {
+            Toast.makeText(
+              requireContext(),
+              "网络请求失败，请检查网络连接",
+              Toast.LENGTH_SHORT
+            ).show()
+            swipeRefreshLayout.isRefreshing = false
+          }
         }
       }
 
@@ -174,16 +140,16 @@ class QuestionAnswerActvity : AppCompatActivity() {
                 )
               )
             }
-
             hideProgressDialog()
-
-            runOnUiThread {
-              if (currentPage == 0) {
-                questionAdapter.setData(questionList)
-              } else {
-                questionAdapter.addData(questionList)
+            if (isAdded) {
+              requireActivity().runOnUiThread {
+                if (currentPage == 0) {
+                  questionAdapter.setData(questionList)
+                } else {
+                  questionAdapter.addData(questionList)
+                }
+                swipeRefreshLayout.isRefreshing = false
               }
-              swipeRefreshLayout.isRefreshing = false
             }
           }
         }
@@ -192,21 +158,21 @@ class QuestionAnswerActvity : AppCompatActivity() {
   }
 
   private fun fetchQuestionData() {
-
     val client = OkHttpClient()
     val request = Request.Builder()
       .url("https://wanandroid.com/wenda/list/$currentPage/json")
       .build()
-
     client.newCall(request).enqueue(object : Callback {
       override fun onFailure(call: Call, e: IOException) {
-        runOnUiThread {
-          Toast.makeText(
-            this@QuestionAnswerActvity,
-            "网络请求失败，请检查网络连接",
-            Toast.LENGTH_SHORT
-          ).show()
-          swipeRefreshLayout.isRefreshing = false
+        if (isAdded) {
+          requireActivity().runOnUiThread {
+            Toast.makeText(
+              requireContext(),
+              "网络请求失败，请检查网络连接",
+              Toast.LENGTH_SHORT
+            ).show()
+            swipeRefreshLayout.isRefreshing = false
+          }
         }
       }
 
@@ -215,10 +181,8 @@ class QuestionAnswerActvity : AppCompatActivity() {
         if (responseData != null) {
           val jsonObject = JSONObject(responseData)
           val dataArray = jsonObject.optJSONObject("data")?.optJSONArray("datas")
-
           if (dataArray != null) {
             val questionList = mutableListOf<QuestionBean>()
-
             for (i in 0 until dataArray.length()) {
               val questionObject = dataArray.getJSONObject(i)
               val titleOrigin = questionObject.optString("title")
@@ -243,14 +207,15 @@ class QuestionAnswerActvity : AppCompatActivity() {
                 )
               )
             }
-
-            runOnUiThread {
-              if (currentPage == 0) {
-                questionAdapter.setData(questionList)
-              } else {
-                questionAdapter.addData(questionList)
+            if (isAdded) {
+              requireActivity().runOnUiThread {
+                if (currentPage == 0) {
+                  questionAdapter.setData(questionList)
+                } else {
+                  questionAdapter.addData(questionList)
+                }
+                swipeRefreshLayout.isRefreshing = false
               }
-              swipeRefreshLayout.isRefreshing = false
             }
           }
         }
@@ -262,11 +227,9 @@ class QuestionAnswerActvity : AppCompatActivity() {
     recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
       override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
-
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val totalItemCount = layoutManager.itemCount
         val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-
         if (!swipeRefreshLayout.isRefreshing && totalItemCount < (lastVisibleItem + pageSize)) {
           currentPage++
           fetchNextPage()
@@ -274,5 +237,4 @@ class QuestionAnswerActvity : AppCompatActivity() {
       }
     })
   }
-
 }

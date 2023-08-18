@@ -24,4 +24,6 @@
   <string name="logIn">去登录</string>
   <string name="donate">请他喝杯咖啡~</string>
   <string name="webView">Web网页</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -29,24 +29,13 @@ class SystemSettingsActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_system_settings)
 
-    systemSettingsBackImageView = findViewById(R.id.system_settings_back_iv)
-    systemSettingsFollowDarkModeSwitch = findViewById(R.id.system_settings_follow_dark_mode_swt)
-    systemSettingsDarkModeSwitch = findViewById(R.id.system_settings_dark_mode_swt)
-    systemSettingsHideAuthorSwitch = findViewById(R.id.system_settings_hide_author_swt)
-    systemSettingsDarkModeTextView = findViewById(R.id.system_settings_dark_mode_tv)
-    systemSettingsHideGithubSwitch = findViewById(R.id.system_settings_hide_github_swt)
-
-    sharedPreferences = getSharedPreferences("system_settings", MODE_PRIVATE)
-    isFollowDarkMode = sharedPreferences.getBoolean("follow_dark_mode", false)
-    isDarkMode = sharedPreferences.getBoolean("dark_mode", false)
-    isHideAuthor = sharedPreferences.getBoolean("hide_author", false)
-    isHideGithub = sharedPreferences.getBoolean("hide_github", false)
-    systemSettingsHideGithubSwitch.isChecked = isHideGithub
-    systemSettingsHideAuthorSwitch.isChecked = isHideAuthor
-    systemSettingsFollowDarkModeSwitch.isChecked = isFollowDarkMode
+    initView()
     updateDarkModeSwitchState(isDarkMode)
     updateAppTheme(isFollowDarkMode, isDarkMode)
+    setClickListener()
+  }
 
+  private fun setClickListener() {
     systemSettingsHideAuthorSwitch.setOnCheckedChangeListener { _, isChecked ->
       saveHideAuthorState(isChecked)
     }
@@ -72,9 +61,29 @@ class SystemSettingsActivity : AppCompatActivity() {
     }
 
     systemSettingsBackImageView.setOnClickListener {
+      val editor = sharedPreferences.edit()
+      editor.putBoolean("return_person_fragment", true)
+      editor.apply()
       finish()
     }
+  }
 
+  private fun initView() {
+    systemSettingsBackImageView = findViewById(R.id.system_settings_back_iv)
+    systemSettingsFollowDarkModeSwitch = findViewById(R.id.system_settings_follow_dark_mode_swt)
+    systemSettingsDarkModeSwitch = findViewById(R.id.system_settings_dark_mode_swt)
+    systemSettingsHideAuthorSwitch = findViewById(R.id.system_settings_hide_author_swt)
+    systemSettingsDarkModeTextView = findViewById(R.id.system_settings_dark_mode_tv)
+    systemSettingsHideGithubSwitch = findViewById(R.id.system_settings_hide_github_swt)
+
+    sharedPreferences = getSharedPreferences("system_settings", MODE_PRIVATE)
+    isFollowDarkMode = sharedPreferences.getBoolean("follow_dark_mode", false)
+    isDarkMode = sharedPreferences.getBoolean("dark_mode", false)
+    isHideAuthor = sharedPreferences.getBoolean("hide_author", false)
+    isHideGithub = sharedPreferences.getBoolean("hide_github", false)
+    systemSettingsHideGithubSwitch.isChecked = isHideGithub
+    systemSettingsHideAuthorSwitch.isChecked = isHideAuthor
+    systemSettingsFollowDarkModeSwitch.isChecked = isFollowDarkMode
   }
 
   private fun updateDarkModeSwitchState(isChecked: Boolean) {

@@ -4,7 +4,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -12,12 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import com.example.myfirstapp.R
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationBarView
 
-class PersonActivity : AppCompatActivity() {
-
+class PersonFragment : Fragment() {
   private lateinit var logInTv: TextView
   private lateinit var logOutBtn: Button
   private lateinit var personAvatarLayout: LinearLayout
@@ -27,7 +27,6 @@ class PersonActivity : AppCompatActivity() {
   private lateinit var personNightImageView: ImageView
   private lateinit var sharedPreferencesUserData: SharedPreferences
   private lateinit var sharedPreferencesSystemSettings: SharedPreferences
-  private lateinit var bottomNavigationView: BottomNavigationView
 
   private var username: String = ""
   private var isLogin: Boolean = false
@@ -35,100 +34,82 @@ class PersonActivity : AppCompatActivity() {
   private var isHideAuthor: Boolean = false
   private var isHideGithub: Boolean = false
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_person)
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val view = inflater.inflate(R.layout.fragment_person, container, false)
+    initView(view)
+    return view
+  }
 
-    logInTv = findViewById(R.id.person_login_tv)
-    logOutBtn = findViewById(R.id.person_logout_btn)
-    personAvatarLayout = findViewById(R.id.person_avatar_layout)
-    personSettingLayout = findViewById(R.id.person_my_setting_layout)
-    personNightImageView = findViewById(R.id.person_night_iv)
-    personAboutLayout = findViewById(R.id.person_my_about_layout)
-    personGithubLayout = findViewById(R.id.person_my_github_layout)
-
-    sharedPreferencesUserData = getSharedPreferences("user_data", MODE_PRIVATE)
+  private fun initView(view: View) {
+    logInTv = view.findViewById(R.id.person_login_tv)
+    logOutBtn = view.findViewById(R.id.person_logout_btn)
+    personAvatarLayout = view.findViewById(R.id.person_avatar_layout)
+    personSettingLayout = view.findViewById(R.id.person_my_setting_layout)
+    personNightImageView = view.findViewById(R.id.person_night_iv)
+    personAboutLayout = view.findViewById(R.id.person_my_about_layout)
+    personGithubLayout = view.findViewById(R.id.person_my_github_layout)
+    sharedPreferencesUserData = requireActivity().getSharedPreferences(
+      "user_data", AppCompatActivity
+        .MODE_PRIVATE
+    )
     isLogin = sharedPreferencesUserData.getBoolean("isLogin", false)
     username = sharedPreferencesUserData.getString("username", "") ?: ""
 
-    sharedPreferencesSystemSettings = getSharedPreferences("system_settings", MODE_PRIVATE)
+    sharedPreferencesSystemSettings = requireActivity().getSharedPreferences(
+      "system_settings",
+      AppCompatActivity.MODE_PRIVATE
+    )
     isDarkMode = sharedPreferencesSystemSettings.getBoolean("dark_mode", false)
     isHideAuthor = sharedPreferencesSystemSettings.getBoolean("hide_author", false)
     isHideGithub = sharedPreferencesSystemSettings.getBoolean("hide_github", false)
+    updateUI(isLogin, username)
+    updateAboutVisibility(isHideAuthor)
+    updateGithubVisibility(isHideGithub)
+    setLogOut()
+    setPersonAvatarLayout()
+    setPersonSettingLayout()
+  }
 
+  private fun setPersonSettingLayout() {
+    personSettingLayout.setOnClickListener {
+      val intent = Intent(requireContext(), SystemSettingsActivity::class.java)
+      startActivity(intent)
+    }
+  }
+
+  private fun setPersonAvatarLayout() {
+    if (isLogin) {
+      personAvatarLayout.setOnClickListener {
+        requireActivity().runOnUiThread {
+          Toast.makeText(requireContext(), "您已经登录啦！", Toast.LENGTH_SHORT).show()
+        }
+      }
+    } else {
+      personAvatarLayout.setOnClickListener {
+        val intent = Intent(requireContext(), LogInActivity::class.java)
+        startActivity(intent)
+      }
+    }
+  }
+
+  private fun setLogOut() {
     logOutBtn.setOnClickListener {
-      val sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
+      val sharedPreferences =
+        requireActivity().getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
       val editor = sharedPreferences.edit()
       editor.putBoolean("isLogin", false)
       editor.putString("username", "")
       editor.apply()
       updateUI(false, "")
-      runOnUiThread {
-        Toast.makeText(this@PersonActivity, "您已退出登录！", Toast.LENGTH_SHORT).show()
+      requireActivity().runOnUiThread {
+        Toast.makeText(requireContext(), "您已退出登录！", Toast.LENGTH_SHORT).show()
       }
       personAvatarLayout.setOnClickListener {
-        val intent = Intent(this@PersonActivity, LogInActivity::class.java)
+        val intent = Intent(requireContext(), LogInActivity::class.java)
         startActivity(intent)
-      }
-    }
-
-    updateUI(isLogin, username)
-    updateAboutVisibility(isHideAuthor)
-    updateGithubVisibility(isHideGithub)
-
-    if (isLogin) {
-      personAvatarLayout.setOnClickListener {
-        runOnUiThread {
-          Toast.makeText(this@PersonActivity, "您已经登录啦！", Toast.LENGTH_SHORT).show()
-        }
-      }
-    } else {
-      personAvatarLayout.setOnClickListener {
-        val intent = Intent(this@PersonActivity, LogInActivity::class.java)
-        startActivity(intent)
-      }
-    }
-
-    personSettingLayout.setOnClickListener {
-      val intent = Intent(this@PersonActivity, SystemSettingsActivity::class.java)
-      startActivity(intent)
-    }
-
-    bottomNavigationView = findViewById(R.id.bottomNavigationView)
-    setupBottomNavigationView()
-    bottomNavigationView.selectedItemId = R.id.action_profile
-    bottomNavigationView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
-  }
-
-  private fun setupBottomNavigationView() {
-    bottomNavigationView.setOnItemSelectedListener { item ->
-      when (item.itemId) {
-        R.id.action_home -> {
-          val intent = Intent(this, MainActivity::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_question -> {
-          val intent = Intent(this, QuestionAnswerActvity::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_system -> {
-          val intent = Intent(this, SystemActivity::class.java)
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          startActivity(intent)
-          true
-        }
-
-        R.id.action_profile -> {
-          true
-        }
-
-        else -> false
       }
     }
   }
@@ -160,11 +141,24 @@ class PersonActivity : AppCompatActivity() {
 
   override fun onResume() {
     super.onResume()
+    setPersonNightImageView()
+    updateAboutVisibility(isHideAuthor)
+    updateGithubVisibility(isHideGithub)
+  }
+
+  private fun setPersonNightImageView() {
     personNightImageView.setOnClickListener {
       if (sharedPreferencesSystemSettings.getBoolean("follow_dark_mode", false)) {
-        Toast.makeText(this@PersonActivity, "当前为跟随系统暗色模式，无法修改主题哦！", Toast.LENGTH_SHORT)
+        Toast.makeText(
+          requireContext(),
+          "当前为跟随系统暗色模式，无法修改主题哦！",
+          Toast.LENGTH_SHORT
+        )
           .show()
       } else {
+        val editor = sharedPreferencesSystemSettings.edit()
+        editor.putBoolean("return_person_fragment", true)
+        editor.apply()
         isDarkMode = !isDarkMode
         saveDarkModeState(isDarkMode)
         updateAppTheme(isDarkMode)
@@ -176,8 +170,5 @@ class PersonActivity : AppCompatActivity() {
     personNightImageView.setImageResource(imgRes)
     isHideAuthor = sharedPreferencesSystemSettings.getBoolean("hide_author", false)
     isHideGithub = sharedPreferencesSystemSettings.getBoolean("hide_github", false)
-    updateAboutVisibility(isHideAuthor)
-    updateGithubVisibility(isHideGithub)
   }
-
 }
